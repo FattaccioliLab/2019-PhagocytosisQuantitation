@@ -1,0 +1,1044 @@
+CellProfiler Pipeline: http://www.cellprofiler.org
+Version:3
+DateRevision:20160503183100
+GitHash:ac0529e
+ModuleCount:47
+HasImagePlaneDetails:False
+
+Images:[module_num:1|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'For the pipeline to turn, the following images are mandatory\x3A \', \'- Image of the cytoplasm or the whole cell at two levels (basal and mid-height)\', \'- Image of the nucleus (here Hoechst at mid-cell level)\', \'- 2 bright field images at two different heights \', \'Others are optional and depend on the intended observations. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    :
+    Filter images?:Custom
+    Select the rule criteria:and (extension does istif) (file doesnot contain "pmd") (file does contain "Series")
+
+Metadata:[module_num:2|svn_version:\'Unknown\'|variable_revision_number:4|show_window:False|notes:\x5B\'The regular expression must be adapted to the filenames of your data. It needs to extract the identifiers of the different images that the pipelines requires to run, from either the filename, the folder name or the metadata. \', \'The Image Number identifies the individual field of view. Plane and Channel identify together the different images taken for one field of view. They are mandatory. \', \'Date and PlateID are useful to group the field of view taken on one coverslip or in one experimental condition. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Extract metadata?:Yes
+    Metadata data type:Text
+    Metadata types:{}
+    Extraction method count:2
+    Metadata extraction method:Extract from file/folder names
+    Metadata source:File name
+    Regular expression:Series0(?P<ImageNumber>\\\\d*)--Z0(?P<Plane>\\\\d*)--C(?P<Channel>.*).tif
+    Regular expression:(?P<Date>\x5B0-9\x5D{4}_\x5B0-9\x5D{2}_\x5B0-9\x5D{2})$
+    Extract metadata from:All images
+    Select the filtering criteria:and (file does contain "")
+    Metadata file location:
+    Match file and image metadata:\x5B\x5D
+    Use case insensitive matching?:No
+    Metadata extraction method:Extract from file/folder names
+    Metadata source:Folder name
+    Regular expression:^(?P<Plate>.*)_(?P<Well>\x5BA-P\x5D\x5B0-9\x5D{2})_s(?P<Site>\x5B0-9\x5D)_w(?P<ChannelNumber>\x5B0-9\x5D)
+    Regular expression:.*\x5B\\\\\\\\/\x5D(?P<Date>\\\\d{4}-\\\\d{1,2}-\\\\d{1,2})\x5B\\\\\\\\/\x5D(?P<PlateID>.*)$
+    Extract metadata from:All images
+    Select the filtering criteria:and (file does contain "")
+    Metadata file location:
+    Match file and image metadata:\x5B\x5D
+    Use case insensitive matching?:No
+
+NamesAndTypes:[module_num:3|svn_version:\'Unknown\'|variable_revision_number:6|show_window:False|notes:\x5B\'This module assign names to the different images to analyze for one field of view. \', \'The image of the nuclei is here named DAPI. The image of the whole cell is named SiRactin. The images of BF are named BF and BFLow. \', \'These names can be changed, but must be replaced in all the subsequent occurences in the pipeline and post-processing codes. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Assign a name to:Images matching rules
+    Select the image type:Grayscale image
+    Name to assign these images:DNA
+    Match metadata:\x5B{u\'DAPI\'\x3A u\'PlateID\', u\'BF\'\x3A u\'PlateID\', u\'BFLow\'\x3A u\'PlateID\', u\'SiRactinH\'\x3A u\'PlateID\', u\'SiRactin\'\x3A u\'PlateID\'}, {u\'DAPI\'\x3A u\'ImageNumber\', u\'BF\'\x3A u\'ImageNumber\', u\'BFLow\'\x3A u\'ImageNumber\', u\'SiRactinH\'\x3A u\'ImageNumber\', u\'SiRactin\'\x3A u\'ImageNumber\'}\x5D
+    Image set matching method:Metadata
+    Set intensity range from:Image metadata
+    Assignments count:5
+    Single images count:0
+    Maximum intensity:255.0
+    Select the rule criteria:and (metadata does Channel "00") (metadata does Plane "1")
+    Name to assign these images:DAPI
+    Name to assign these objects:Cell
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Retain outlines of loaded objects?:No
+    Name the outline image:LoadedOutlines
+    Maximum intensity:255.0
+    Select the rule criteria:and (metadata does Channel "01") (metadata does Plane "0")
+    Name to assign these images:SiRactin
+    Name to assign these objects:Nucleus
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Retain outlines of loaded objects?:No
+    Name the outline image:LoadedOutlines
+    Maximum intensity:255.0
+    Select the rule criteria:and (metadata does Channel "03") (metadata does Plane "1")
+    Name to assign these images:BF
+    Name to assign these objects:Cytoplasm
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Retain outlines of loaded objects?:No
+    Name the outline image:LoadedOutlines
+    Maximum intensity:255.0
+    Select the rule criteria:and (metadata does Channel "03") (metadata does Plane "0")
+    Name to assign these images:BFLow
+    Name to assign these objects:Speckle
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Retain outlines of loaded objects?:No
+    Name the outline image:LoadedOutlines
+    Maximum intensity:255.0
+    Select the rule criteria:and (metadata does Channel "01") (metadata does Plane "1")
+    Name to assign these images:SiRactinH
+    Name to assign these objects:Object1
+    Select the image type:Grayscale image
+    Set intensity range from:Image metadata
+    Retain outlines of loaded objects?:No
+    Name the outline image:LoadedOutlines
+    Maximum intensity:255.0
+
+Groups:[module_num:4|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'Date and PlateID, extracted from the foldernames, are used to group images by the experimental conditions. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Do you want to group your images?:Yes
+    grouping metadata count:1
+    Metadata category:PlateID
+
+ImageMath:[module_num:5|svn_version:\'Unknown\'|variable_revision_number:4|show_window:True|notes:\x5B\'This module computes the difference between the two BF images. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Operation:Subtract
+    Raise the power of the result by:1.0
+    Multiply the result by:1.0
+    Add to result:0.0
+    Set values less than 0 equal to 0?:Yes
+    Set values greater than 1 equal to 1?:Yes
+    Ignore the image masks?:No
+    Name the output image:BFAfterMath
+    Image or measurement?:Image
+    Select the first image:BFLow
+    Multiply the first image by:1.0
+    Measurement:
+    Image or measurement?:Image
+    Select the second image:BF
+    Multiply the second image by:1.0
+    Measurement:
+
+IdentifyPrimaryObjects:[module_num:6|svn_version:\'Unknown\'|variable_revision_number:10|show_window:False|notes:\x5B\'This module finds the targets. The typical diameter and threshold parameters should be adapted to the targets and experiments.\', \'It is normal to find a lot of non-targets objects at this step. They will be filtered out afterwards. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:BFAfterMath
+    Name the primary objects to be identified:Drops
+    Typical diameter of objects, in pixel units (Min,Max):15,350
+    Discard objects outside the diameter range?:Yes
+    Try to merge too small objects with nearby larger objects?:No
+    Discard objects touching the border of the image?:Yes
+    Method to distinguish clumped objects:Shape
+    Method to draw dividing lines between clumped objects:Shape
+    Size of smoothing filter:10
+    Suppress local maxima that are closer than this minimum allowed distance:15
+    Speed up by using lower-resolution image to find local maxima?:No
+    Name the outline image:PrimaryOutlines
+    Fill holes in identified objects?:After both thresholding and declumping
+    Automatically calculate size of smoothing filter for declumping?:Yes
+    Automatically calculate minimum allowed distance between local maxima?:No
+    Retain outlines of the identified objects?:No
+    Automatically calculate the threshold using the Otsu method?:Yes
+    Enter Laplacian of Gaussian threshold:0.5
+    Automatically calculate the size of objects for the Laplacian of Gaussian filter?:Yes
+    Enter LoG filter diameter:5.0
+    Handling of objects if excessive number of objects identified:Continue
+    Maximum number of objects:500
+    Threshold setting version:2
+    Threshold strategy:Global
+    Thresholding method:Otsu
+    Select the smoothing method for thresholding:Automatic
+    Threshold smoothing scale:1.0
+    Threshold correction factor:1.0
+    Lower and upper bounds on threshold:0.01,1.0
+    Approximate fraction of image covered by objects?:0.01
+    Manual threshold:0.0
+    Select the measurement to threshold with:None
+    Select binary image:None
+    Masking objects:None
+    Two-class or three-class thresholding?:Three classes
+    Minimize the weighted variance or the entropy?:Weighted variance
+    Assign pixels in the middle intensity class to the foreground or the background?:Background
+    Method to calculate adaptive window size:Image size
+    Size of adaptive window:10
+    Use default parameters?:Default
+    Lower outlier fraction:0.05
+    Upper outlier fraction:0.05
+    Averaging method:Mean
+    Variance method:Standard deviation
+    # of deviations:2.0
+
+MeasureObjectSizeShape:[module_num:7|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\'Targets are measured to filter them by size. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to measure:Drops
+    Calculate the Zernike features?:No
+
+ClassifyObjects:[module_num:8|svn_version:\'Unknown\'|variable_revision_number:2|show_window:True|notes:\x5B\'This module is a guide for the eye during the testing of the filter parameters. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Make each classification decision on how many measurements?:Pair of measurements
+    Hidden:1
+    Select the object to be classified:None
+    Select the measurement to classify by:None
+    Select bin spacing:Evenly spaced bins
+    Number of bins:3
+    Lower threshold:0.0
+    Use a bin for objects below the threshold?:No
+    Upper threshold:1.0
+    Use a bin for objects above the threshold?:No
+    Enter the custom thresholds separating the values between bins:0,1
+    Give each bin a name?:No
+    Enter the bin names separated by commas:None
+    Retain an image of the classified objects?:No
+    Name the output image:ClassifiedNuclei
+    Select the object name:Drops
+    Select the first measurement:AreaShape_Area
+    Method to select the cutoff:Custom
+    Enter the cutoff value:1000
+    Select the second measurement:AreaShape_FormFactor
+    Method to select the cutoff:Custom
+    Enter the cutoff value:0.6
+    Use custom names for the bins?:No
+    Enter the low-low bin name:low_low
+    Enter the low-high bin name:low_high
+    Enter the high-low bin name:high_low
+    Enter the high-high bin name:high_high
+    Retain an image of the classified objects?:No
+    Enter the image name:None
+
+FilterObjects:[module_num:9|svn_version:\'Unknown\'|variable_revision_number:7|show_window:True|notes:\x5B\'The cutoff area and shape value must be adapted to your targets. Only targets above the cutoff area and above the cutoff FormFactor will be kept. \', \'At the end of this module, the identification of targets is complete. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Name the output objects:FilteredDrops
+    Select the object to filter:Drops
+    Select the filtering mode:Measurements
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Retain outlines of the identified objects?:No
+    Name the outline image:FilteredObjects
+    Rules file location:Elsewhere...\x7C
+    Rules file name:rules.txt
+    Class number:1
+    Measurement count:2
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_FormFactor
+    Filter using a minimum measurement value?:Yes
+    Minimum value:0.6
+    Filter using a maximum measurement value?:No
+    Maximum value:1.0
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:1000
+    Filter using a maximum measurement value?:No
+    Maximum value:1.0
+
+Smooth:[module_num:10|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'Smoothed confocal images give better results for segmentation. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:DAPI
+    Name the output image:SmoothDAPI
+    Select smoothing method:Gaussian Filter
+    Calculate artifact diameter automatically?:No
+    Typical artifact diameter:10.0
+    Edge intensity difference:0.1
+    Clip intensities to 0 and 1?:Yes
+
+IdentifyPrimaryObjects:[module_num:11|svn_version:\'Unknown\'|variable_revision_number:10|show_window:True|notes:\x5B\'This module spots the targets. The typical diameter must be adjusted to your image resolution and nuclei size. The lower bound on threshold may have to be adapted to your illumination conditions. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:SmoothDAPI
+    Name the primary objects to be identified:Nuclei
+    Typical diameter of objects, in pixel units (Min,Max):7500,50000
+    Discard objects outside the diameter range?:No
+    Try to merge too small objects with nearby larger objects?:No
+    Discard objects touching the border of the image?:Yes
+    Method to distinguish clumped objects:None
+    Method to draw dividing lines between clumped objects:Intensity
+    Size of smoothing filter:10
+    Suppress local maxima that are closer than this minimum allowed distance:7.0
+    Speed up by using lower-resolution image to find local maxima?:Yes
+    Name the outline image:PrimaryOutlines
+    Fill holes in identified objects?:After both thresholding and declumping
+    Automatically calculate size of smoothing filter for declumping?:Yes
+    Automatically calculate minimum allowed distance between local maxima?:Yes
+    Retain outlines of the identified objects?:No
+    Automatically calculate the threshold using the Otsu method?:Yes
+    Enter Laplacian of Gaussian threshold:0.5
+    Automatically calculate the size of objects for the Laplacian of Gaussian filter?:Yes
+    Enter LoG filter diameter:5.0
+    Handling of objects if excessive number of objects identified:Continue
+    Maximum number of objects:500
+    Threshold setting version:2
+    Threshold strategy:Adaptive
+    Thresholding method:Otsu
+    Select the smoothing method for thresholding:Automatic
+    Threshold smoothing scale:1.0
+    Threshold correction factor:1.0
+    Lower and upper bounds on threshold:0.05,1.0
+    Approximate fraction of image covered by objects?:0.01
+    Manual threshold:0.0
+    Select the measurement to threshold with:None
+    Select binary image:None
+    Masking objects:None
+    Two-class or three-class thresholding?:Two classes
+    Minimize the weighted variance or the entropy?:Weighted variance
+    Assign pixels in the middle intensity class to the foreground or the background?:Foreground
+    Method to calculate adaptive window size:Image size
+    Size of adaptive window:10
+    Use default parameters?:Default
+    Lower outlier fraction:0.05
+    Upper outlier fraction:0.05
+    Averaging method:Mean
+    Variance method:Standard deviation
+    # of deviations:2.0
+
+MeasureObjectSizeShape:[module_num:12|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to measure:Nuclei
+    Calculate the Zernike features?:No
+
+FilterObjects:[module_num:13|svn_version:\'Unknown\'|variable_revision_number:7|show_window:False|notes:\x5B\'The IdentifyPrimaryObjects does not discard objects outside the size range. Too small objects are discarded at this step. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Name the output objects:FilteredNuclei
+    Select the object to filter:Nuclei
+    Select the filtering mode:Measurements
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Retain outlines of the identified objects?:No
+    Name the outline image:FilteredObjects
+    Rules file location:Elsewhere...\x7C
+    Rules file name:rules.txt
+    Class number:1
+    Measurement count:1
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:5000
+    Filter using a maximum measurement value?:No
+    Maximum value:1.0
+
+Smooth:[module_num:14|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'Smoothing confocal images greatly improved the detection of borders. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:SiRactin
+    Name the output image:SmoothSiR
+    Select smoothing method:Gaussian Filter
+    Calculate artifact diameter automatically?:No
+    Typical artifact diameter:10.0
+    Edge intensity difference:0.1
+    Clip intensities to 0 and 1?:Yes
+
+Smooth:[module_num:15|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'Smoothing confocal images greatly improved the detection of borders. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:SiRactinH
+    Name the output image:SmoothSiRH
+    Select smoothing method:Gaussian Filter
+    Calculate artifact diameter automatically?:No
+    Typical artifact diameter:10.0
+    Edge intensity difference:0.1
+    Clip intensities to 0 and 1?:Yes
+
+IdentifySecondaryObjects:[module_num:16|svn_version:\'Unknown\'|variable_revision_number:9|show_window:True|notes:\x5B\'Filtered Nuclei are used as seed to propagate the cytoplasms of the cells. The threshold strategy and parameters may have to be adapted for optimal detection. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input objects:FilteredNuclei
+    Name the objects to be identified:Cells
+    Select the method to identify the secondary objects:Propagation
+    Select the input image:SmoothSiR
+    Number of pixels by which to expand the primary objects:10
+    Regularization factor:0.05
+    Name the outline image:SecondaryOutlines
+    Retain outlines of the identified secondary objects?:No
+    Discard secondary objects touching the border of the image?:No
+    Discard the associated primary objects?:No
+    Name the new primary objects:FilteredNuclei
+    Retain outlines of the new primary objects?:No
+    Name the new primary object outlines:FilteredNucleiOutlines
+    Fill holes in identified objects?:Yes
+    Threshold setting version:2
+    Threshold strategy:Global
+    Thresholding method:Otsu
+    Select the smoothing method for thresholding:No smoothing
+    Threshold smoothing scale:1.0
+    Threshold correction factor:1.0
+    Lower and upper bounds on threshold:0.08,1.0
+    Approximate fraction of image covered by objects?:0.01
+    Manual threshold:0.0
+    Select the measurement to threshold with:None
+    Select binary image:None
+    Masking objects:None
+    Two-class or three-class thresholding?:Three classes
+    Minimize the weighted variance or the entropy?:Weighted variance
+    Assign pixels in the middle intensity class to the foreground or the background?:Foreground
+    Method to calculate adaptive window size:Image size
+    Size of adaptive window:10
+    Use default parameters?:Default
+    Lower outlier fraction:0.05
+    Upper outlier fraction:0.05
+    Averaging method:Mean
+    Variance method:Standard deviation
+    # of deviations:2.0
+
+IdentifyTertiaryObjects:[module_num:17|svn_version:\'Unknown\'|variable_revision_number:2|show_window:True|notes:\x5B\'The nuclei are extruded from the cells.\'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the larger identified objects:Cells
+    Select the smaller identified objects:FilteredNuclei
+    Name the tertiary objects to be identified:Cytoplasm
+    Name the outline image:CytoplasmOutlines
+    Retain outlines of the tertiary objects?:Yes
+    Shrink smaller object prior to subtraction?:Yes
+
+MeasureObjectSizeShape:[module_num:18|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to measure:Cytoplasm
+    Calculate the Zernike features?:Yes
+
+ClassifyObjects:[module_num:19|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Make each classification decision on how many measurements?:Single measurement
+    Hidden:1
+    Select the object to be classified:Cytoplasm
+    Select the measurement to classify by:AreaShape_Area
+    Select bin spacing:Evenly spaced bins
+    Number of bins:5
+    Lower threshold:15000
+    Use a bin for objects below the threshold?:Yes
+    Upper threshold:50000
+    Use a bin for objects above the threshold?:Yes
+    Enter the custom thresholds separating the values between bins:0,1
+    Give each bin a name?:No
+    Enter the bin names separated by commas:None
+    Retain an image of the classified objects?:No
+    Name the output image:ClassifiedNuclei
+    Select the object name:None
+    Select the first measurement:None
+    Method to select the cutoff:Mean
+    Enter the cutoff value:0.5
+    Select the second measurement:None
+    Method to select the cutoff:Mean
+    Enter the cutoff value:0.5
+    Use custom names for the bins?:No
+    Enter the low-low bin name:low_low
+    Enter the low-high bin name:low_high
+    Enter the high-low bin name:high_low
+    Enter the high-high bin name:high_high
+    Retain an image of the classified objects?:No
+    Enter the image name:None
+
+FilterObjects:[module_num:20|svn_version:\'Unknown\'|variable_revision_number:7|show_window:False|notes:\x5B\'Small cytoplasms, corresponding to cells on the borders of the image or inadequately detected, are discarded. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Name the output objects:FilteredCytoplasm
+    Select the object to filter:Cytoplasm
+    Select the filtering mode:Measurements
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Retain outlines of the identified objects?:No
+    Name the outline image:FilteredObjects
+    Rules file location:Elsewhere...\x7C
+    Rules file name:rules.txt
+    Class number:1
+    Measurement count:1
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:AreaShape_Area
+    Filter using a minimum measurement value?:Yes
+    Minimum value:15000
+    Filter using a maximum measurement value?:No
+    Maximum value:1.0
+
+IdentifySecondaryObjects:[module_num:21|svn_version:\'Unknown\'|variable_revision_number:9|show_window:True|notes:\x5B\'In this variant, the cell contours are also independantly found at the mid-cell level, on the SiRactinH images. This is optional. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input objects:Nuclei
+    Name the objects to be identified:CellsH
+    Select the method to identify the secondary objects:Propagation
+    Select the input image:SmoothSiRH
+    Number of pixels by which to expand the primary objects:10
+    Regularization factor:0.05
+    Name the outline image:SecondaryOutlines
+    Retain outlines of the identified secondary objects?:No
+    Discard secondary objects touching the border of the image?:No
+    Discard the associated primary objects?:No
+    Name the new primary objects:FilteredNuclei
+    Retain outlines of the new primary objects?:No
+    Name the new primary object outlines:FilteredNucleiOutlines
+    Fill holes in identified objects?:Yes
+    Threshold setting version:2
+    Threshold strategy:Adaptive
+    Thresholding method:Otsu
+    Select the smoothing method for thresholding:No smoothing
+    Threshold smoothing scale:1.0
+    Threshold correction factor:1.0
+    Lower and upper bounds on threshold:0.05,1.0
+    Approximate fraction of image covered by objects?:0.01
+    Manual threshold:0.0
+    Select the measurement to threshold with:None
+    Select binary image:None
+    Masking objects:None
+    Two-class or three-class thresholding?:Three classes
+    Minimize the weighted variance or the entropy?:Weighted variance
+    Assign pixels in the middle intensity class to the foreground or the background?:Foreground
+    Method to calculate adaptive window size:Image size
+    Size of adaptive window:10
+    Use default parameters?:Default
+    Lower outlier fraction:0.05
+    Upper outlier fraction:0.05
+    Averaging method:Mean
+    Variance method:Standard deviation
+    # of deviations:2.0
+
+IdentifyTertiaryObjects:[module_num:22|svn_version:\'Unknown\'|variable_revision_number:2|show_window:True|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the larger identified objects:CellsH
+    Select the smaller identified objects:FilteredNuclei
+    Name the tertiary objects to be identified:CytoplasmH
+    Name the outline image:CytoplasmOutlines
+    Retain outlines of the tertiary objects?:No
+    Shrink smaller object prior to subtraction?:Yes
+
+IdentifyTertiaryObjects:[module_num:23|svn_version:\'Unknown\'|variable_revision_number:2|show_window:True|notes:\x5B\'The Cytoplasm Minus Drops objects in particularly useful to measure the intensities in the cytoplasms, since internalized droplets would alter dramatically the measurement. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the larger identified objects:FilteredCytoplasm
+    Select the smaller identified objects:FilteredDrops
+    Name the tertiary objects to be identified:CytoplasmMinusDrops
+    Name the outline image:CytoplasmOutlines
+    Retain outlines of the tertiary objects?:No
+    Shrink smaller object prior to subtraction?:Yes
+
+SaveImages:[module_num:24|svn_version:\'Unknown\'|variable_revision_number:11|show_window:False|notes:\x5B\'The outlines of the cytoplasms are saved as binary images. They can be compared to the original images afterwards to assess the efficiency of the segmentation. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the type of image to save:Image
+    Select the image to save:CytoplasmOutlines
+    Select the objects to save:None
+    Select the module display window to save:None
+    Select method for constructing file names:From image filename
+    Select image name for file prefix:BF
+    Enter single file name:OrigBlue
+    Number of digits:4
+    Append a suffix to the image file name?:Yes
+    Text to append to the image name:_Cytoplasm
+    Saved file format:tif
+    Output file location:Same folder as image\x7C
+    Image bit depth:8-bit integer
+    Overwrite existing files without warning?:Yes
+    When to save:Every cycle
+    Rescale the images? :No
+    Save as grayscale or color image?:Grayscale
+    Select colormap:gray
+    Record the file and path information to the saved image?:No
+    Create subfolders in the output folder?:No
+    Base image folder:Elsewhere...\x7C
+    Saved movie format:avi
+
+ConvertObjectsToImage:[module_num:25|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input objects:FilteredCytoplasm
+    Name the output image:CytoImage
+    Select the color format:Binary (black & white)
+    Select the colormap:Default
+
+ConvertObjectsToImage:[module_num:26|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input objects:CytoplasmH
+    Name the output image:CytoHImage
+    Select the color format:Binary (black & white)
+    Select the colormap:Default
+
+ConvertObjectsToImage:[module_num:27|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input objects:FilteredDrops
+    Name the output image:DropImage
+    Select the color format:Binary (black & white)
+    Select the colormap:Default
+
+Morph:[module_num:28|svn_version:\'Unknown\'|variable_revision_number:4|show_window:False|notes:\x5B\'Inner droplets are shrunk version of the Drops objects. They are used to check the intensity of the cytoplasmic dye within the target. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input image:DropImage
+    Name the output image:InnerDropImage
+    Select the operation to perform:erode
+    Number of times to repeat operation:Once
+    Repetition number:2
+    Diameter:20
+    Structuring element:Disk
+    X offset:1.0
+    Y offset:1.0
+    Angle:0.0
+    Width:3.0
+    Height:3.0
+    Custom:5,5,1111111111111111111111111
+    Rescale values from 0 to 1?:Yes
+
+ImageMath:[module_num:29|svn_version:\'Unknown\'|variable_revision_number:4|show_window:False|notes:\x5B\'This module may optionally be use to ponder the importance of the borders detected on the images at two different heights of the cell. Here only the borders detected at the basal level are acknowledged (first multiplier is 1, second is 0). \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Operation:Add
+    Raise the power of the result by:1.0
+    Multiply the result by:1.0
+    Add to result:0.0
+    Set values less than 0 equal to 0?:Yes
+    Set values greater than 1 equal to 1?:Yes
+    Ignore the image masks?:No
+    Name the output image:ImageAfterMath
+    Image or measurement?:Image
+    Select the first image:CytoImage
+    Multiply the first image by:1.0
+    Measurement:
+    Image or measurement?:Image
+    Select the second image:CytoHImage
+    Multiply the second image by:0.0
+    Measurement:
+
+ImageMath:[module_num:30|svn_version:\'Unknown\'|variable_revision_number:4|show_window:False|notes:\x5B\'This step multiplies pixelwise the binary of the cytoplasms and the binary of the filtered targets. White areas represent the part of targets that are inside a cytoplasm. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Operation:Multiply
+    Raise the power of the result by:1.0
+    Multiply the result by:1.0
+    Add to result:0.0
+    Set values less than 0 equal to 0?:Yes
+    Set values greater than 1 equal to 1?:Yes
+    Ignore the image masks?:No
+    Name the output image:DropTest
+    Image or measurement?:Image
+    Select the first image:CytoImage
+    Multiply the first image by:1.0
+    Measurement:
+    Image or measurement?:Image
+    Select the second image:DropImage
+    Multiply the second image by:1.0
+    Measurement:
+
+ImageMath:[module_num:31|svn_version:\'Unknown\'|variable_revision_number:4|show_window:False|notes:\x5B\'This module multiplies the binary of inner targets with the image of cytoplasmic dye. On the output images, all areas outside targets have a pixel value of 0. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Operation:Multiply
+    Raise the power of the result by:1.0
+    Multiply the result by:1.0
+    Add to result:0.0
+    Set values less than 0 equal to 0?:Yes
+    Set values greater than 1 equal to 1?:Yes
+    Ignore the image masks?:No
+    Name the output image:MultipliedSiR
+    Image or measurement?:Image
+    Select the first image:SiRactinH
+    Multiply the first image by:1.0
+    Measurement:
+    Image or measurement?:Image
+    Select the second image:InnerDropImage
+    Multiply the second image by:1.0
+    Measurement:
+
+MeasureObjectIntensity:[module_num:32|svn_version:\'Unknown\'|variable_revision_number:3|show_window:False|notes:\x5B\'The intensity within the targets are measured on DropTest and MultipliedSiR. The first measures the part of the target included in a cytoplasm. The second measures the intensity of cytoplamic stain inside the target. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Hidden:2
+    Select an image to measure:DropTest
+    Select an image to measure:MultipliedSiR
+    Select objects to measure:FilteredDrops
+
+ClassifyObjects:[module_num:33|svn_version:\'Unknown\'|variable_revision_number:2|show_window:True|notes:\x5B\'This is a guide for the eye to evaluate the classification of targets. Internalized targets have more than 80% of their area inside a cytoplasm, and intensity of the cytolasmic dye inside them is lower than the cutoff value. The cutoff value should be adjusted to your images. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Make each classification decision on how many measurements?:Pair of measurements
+    Hidden:1
+    Select the object to be classified:FilteredDrops
+    Select the measurement to classify by:Intensity
+    Select bin spacing:Evenly spaced bins
+    Number of bins:3
+    Lower threshold:0.0
+    Use a bin for objects below the threshold?:No
+    Upper threshold:1.0
+    Use a bin for objects above the threshold?:No
+    Enter the custom thresholds separating the values between bins:0,1
+    Give each bin a name?:No
+    Enter the bin names separated by commas:None
+    Retain an image of the classified objects?:No
+    Name the output image:ClassifiedNuclei
+    Select the object name:FilteredDrops
+    Select the first measurement:Intensity_MeanIntensity_DropTest
+    Method to select the cutoff:Custom
+    Enter the cutoff value:0.8
+    Select the second measurement:Intensity_MeanIntensity_MultipliedSiR
+    Method to select the cutoff:Custom
+    Enter the cutoff value:0.1
+    Use custom names for the bins?:Yes
+    Enter the low-low bin name:Out
+    Enter the low-high bin name:Border
+    Enter the high-low bin name:In
+    Enter the high-high bin name:Above
+    Retain an image of the classified objects?:Yes
+    Enter the image name:ClassifiedDrops
+
+FilterObjects:[module_num:34|svn_version:\'Unknown\'|variable_revision_number:7|show_window:False|notes:\x5B\'Internalized targets have more than 80% of their area inside a cytoplasm, and intensity of the cytolasmic dye inside them is lower than the cutoff value. The cutoff value should be adjusted to your images. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Name the output objects:FilteredIn
+    Select the object to filter:FilteredDrops
+    Select the filtering mode:Measurements
+    Select the filtering method:Limits
+    Select the objects that contain the filtered objects:None
+    Retain outlines of the identified objects?:No
+    Name the outline image:FilteredObjects
+    Rules file location:Elsewhere...\x7C
+    Rules file name:rules.txt
+    Class number:1
+    Measurement count:2
+    Additional object count:0
+    Assign overlapping child to:Both parents
+    Select the measurement to filter by:Intensity_MeanIntensity_DropTest
+    Filter using a minimum measurement value?:Yes
+    Minimum value:0.8
+    Filter using a maximum measurement value?:No
+    Maximum value:1.0
+    Select the measurement to filter by:Intensity_MeanIntensity_MultipliedSiR
+    Filter using a minimum measurement value?:No
+    Minimum value:0.0
+    Filter using a maximum measurement value?:Yes
+    Maximum value:0.1
+
+SaveImages:[module_num:35|svn_version:\'Unknown\'|variable_revision_number:11|show_window:False|notes:\x5B\'Image of classified targets is saved to assess the efficiency of classification. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the type of image to save:Image
+    Select the image to save:ClassifiedDrops
+    Select the objects to save:None
+    Select the module display window to save:None
+    Select method for constructing file names:From image filename
+    Select image name for file prefix:BF
+    Enter single file name:OrigBlue
+    Number of digits:4
+    Append a suffix to the image file name?:Yes
+    Text to append to the image name:_Final_Output
+    Saved file format:tif
+    Output file location:Same folder as image\x7C
+    Image bit depth:8-bit integer
+    Overwrite existing files without warning?:Yes
+    When to save:Every cycle
+    Rescale the images? :No
+    Save as grayscale or color image?:Grayscale
+    Select colormap:gray
+    Record the file and path information to the saved image?:No
+    Create subfolders in the output folder?:No
+    Base image folder:Elsewhere...\x7C
+    Saved movie format:avi
+
+RelateObjects:[module_num:36|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'This step relates the internalized targets to the cytoplasm that contains them. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input child objects:FilteredIn
+    Select the input parent objects:FilteredCytoplasm
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:No
+    Calculate distances to other parents?:No
+    Parent name:None
+
+CalculateMath:[module_num:37|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'This module counts the total number of targets internalized in each cell. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Name the output measurement:Measurement
+    Operation:None
+    Select the numerator measurement type:Object
+    Select the numerator objects:FilteredCytoplasm
+    Select the numerator measurement:Children_FilteredIn_Count
+    Multiply the above operand by:1.0
+    Raise the power of above operand by:1.0
+    Select the second operand measurement type:Image
+    Select the second operand objects:None
+    Select the second operand measurement:None
+    Multiply the above operand by:1.0
+    Raise the power of above operand by:1.0
+    Take log10 of result?:No
+    Multiply the result by:1.0
+    Raise the power of result by:1.0
+    Add to the result:0.0
+    Constrain the result to a lower bound?:No
+    Enter the lower bound:0.0
+    Constrain the result to an upper bound?:No
+    Enter the upper bound:1.0
+
+ClassifyObjects:[module_num:38|svn_version:\'Unknown\'|variable_revision_number:2|show_window:True|notes:\x5B\'This module group the cells according to the number of internalized targets. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Make each classification decision on how many measurements?:Single measurement
+    Hidden:1
+    Select the object to be classified:FilteredCytoplasm
+    Select the measurement to classify by:Children_FilteredIn_Count
+    Select bin spacing:Evenly spaced bins
+    Number of bins:5
+    Lower threshold:-0.1
+    Use a bin for objects below the threshold?:No
+    Upper threshold:5.0
+    Use a bin for objects above the threshold?:Yes
+    Enter the custom thresholds separating the values between bins:0,1
+    Give each bin a name?:No
+    Enter the bin names separated by commas:None
+    Retain an image of the classified objects?:Yes
+    Name the output image:ClassifiedDropsIn
+    Select the object name:None
+    Select the first measurement:None
+    Method to select the cutoff:Mean
+    Enter the cutoff value:0.5
+    Select the second measurement:None
+    Method to select the cutoff:Mean
+    Enter the cutoff value:0.5
+    Use custom names for the bins?:No
+    Enter the low-low bin name:low_low
+    Enter the low-high bin name:low_high
+    Enter the high-low bin name:high_low
+    Enter the high-high bin name:high_high
+    Retain an image of the classified objects?:No
+    Enter the image name:None
+
+SaveImages:[module_num:39|svn_version:\'Unknown\'|variable_revision_number:11|show_window:False|notes:\x5B\'For reference, an image of the cytoplasms color-coded by number of internalized targets. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the type of image to save:Image
+    Select the image to save:ClassifiedDropsIn
+    Select the objects to save:None
+    Select the module display window to save:None
+    Select method for constructing file names:From image filename
+    Select image name for file prefix:BF
+    Enter single file name:OrigBlue
+    Number of digits:4
+    Append a suffix to the image file name?:Yes
+    Text to append to the image name:_ClassifiedIn
+    Saved file format:tif
+    Output file location:Same folder as image\x7C
+    Image bit depth:8-bit integer
+    Overwrite existing files without warning?:Yes
+    When to save:Every cycle
+    Rescale the images? :No
+    Save as grayscale or color image?:Grayscale
+    Select colormap:gray
+    Record the file and path information to the saved image?:No
+    Create subfolders in the output folder?:No
+    Base image folder:Elsewhere...\x7C
+    Saved movie format:avi
+
+MeasureObjectSizeShape:[module_num:40|svn_version:\'Unknown\'|variable_revision_number:1|show_window:False|notes:\x5B\'Measurement of interest on different objects. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select objects to measure:FilteredIn
+    Select objects to measure:FilteredCytoplasm
+    Select objects to measure:FilteredNuclei
+    Calculate the Zernike features?:Yes
+
+MeasureObjectIntensity:[module_num:41|svn_version:\'Unknown\'|variable_revision_number:3|show_window:False|notes:\x5B\'Measurement of interest on different objects. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Hidden:2
+    Select an image to measure:SiRactin
+    Select an image to measure:SiRactinH
+    Select objects to measure:CytoplasmMinusDrops
+    Select objects to measure:FilteredCytoplasm
+    Select objects to measure:FilteredDrops
+
+RelateObjects:[module_num:42|svn_version:\'Unknown\'|variable_revision_number:2|show_window:False|notes:\x5B\'This module relates the Filtered Cytoplasm with the corresponding Filtered Nucleus. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the input child objects:FilteredNuclei
+    Select the input parent objects:FilteredCytoplasm
+    Calculate child-parent distances?:None
+    Calculate per-parent means for all child measurements?:No
+    Calculate distances to other parents?:No
+    Parent name:None
+
+ExportToSpreadsheet:[module_num:43|svn_version:\'Unknown\'|variable_revision_number:11|show_window:False|notes:\x5B\'Measurements are saved in .csv files. \'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Select the column delimiter:Comma (",")
+    Add image metadata columns to your object data file?:No
+    Limit output to a size that is allowed in Excel?:No
+    Select the measurements to export:No
+    Calculate the per-image mean values for object measurements?:No
+    Calculate the per-image median values for object measurements?:No
+    Calculate the per-image standard deviation values for object measurements?:No
+    Output file location:Default Output Folder\x7C
+    Create a GenePattern GCT file?:No
+    Select source of sample row name:Metadata
+    Select the image to use as the identifier:None
+    Select the metadata to use as the identifier:None
+    Export all measurement types?:Yes
+    :
+    Representation of Nan/Inf:NaN
+    Add a prefix to file names?:Yes
+    Filename prefix:Exp_
+    Overwrite existing files without warning?:Yes
+    Data to export:Do not use
+    Combine these object measurements with those of the previous object?:No
+    File name:DATA.csv
+    Use the object name for the file name?:Yes
+
+ExportToDatabase:[module_num:44|svn_version:\'Unknown\'|variable_revision_number:27|show_window:False|notes:\x5B\'This module saves the measurements relative to the cytoplasms + targets to the database.\'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Database type:SQLite
+    Database name:DefaultDB
+    Add a prefix to table names?:Yes
+    Table prefix:Cyto_
+    SQL file prefix:SQL_
+    Output file location:Default Output Folder\x7C
+    Create a CellProfiler Analyst properties file?:Yes
+    Database host:
+    Username:
+    Password:
+    Name the SQLite database file:Exp.db
+    Calculate the per-image mean values of object measurements?:Yes
+    Calculate the per-image median values of object measurements?:Yes
+    Calculate the per-image standard deviation values of object measurements?:Yes
+    Calculate the per-well mean values of object measurements?:No
+    Calculate the per-well median values of object measurements?:No
+    Calculate the per-well standard deviation values of object measurements?:No
+    Export measurements for all objects to the database?:Select...
+    Select the objects:FilteredCytoplasm
+    Maximum # of characters in a column name:64
+    Create one table per object, a single object table or a single object view?:Single object view
+    Enter an image url prepend if you plan to access your files via http:
+    Write image thumbnails directly to the database?:No
+    Select the images for which you want to save thumbnails:
+    Auto-scale thumbnail pixel intensities?:Yes
+    Select the plate type:None
+    Select the plate metadata:None
+    Select the well metadata:None
+    Include information for all images, using default values?:Yes
+    Properties image group count:1
+    Properties group field count:1
+    Properties filter field count:0
+    Workspace measurement count:1
+    Experiment name:Exp
+    Which objects should be used for locations?:FilteredCytoplasm
+    Enter a phenotype class table name if using the classifier tool:
+    Export object relationships?:Yes
+    Overwrite without warning?:Never
+    Access CPA images via URL?:No
+    Select the classification type:Object
+    Select an image to include:None
+    Use the image name for the display?:Yes
+    Image name:Channel1
+    Channel color:red
+    Do you want to add group fields?:No
+    Enter the name of the group:
+    Enter the per-image columns which define the group, separated by commas:ImageNumber, Image_Metadata_Plate, Image_Metadata_Well
+    Do you want to add filter fields?:No
+    Automatically create a filter for each plate?:No
+    Create a CellProfiler Analyst workspace file?:No
+    Select the measurement display tool:ScatterPlot
+    Type of measurement to plot on the X-axis:Image
+    Enter the object name:None
+    Select the X-axis measurement:None
+    Select the X-axis index:ImageNumber
+    Type of measurement to plot on the Y-axis:Image
+    Enter the object name:None
+    Select the Y-axis measurement:None
+    Select the Y-axis index:ImageNumber
+
+ExportToDatabase:[module_num:45|svn_version:\'Unknown\'|variable_revision_number:27|show_window:False|notes:\x5B\'This module saves the measurements relative to the internalized targets to the database.\'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Database type:SQLite
+    Database name:DefaultDB
+    Add a prefix to table names?:Yes
+    Table prefix:FilteredIn
+    SQL file prefix:SQL_
+    Output file location:Default Output Folder\x7C
+    Create a CellProfiler Analyst properties file?:Yes
+    Database host:
+    Username:
+    Password:
+    Name the SQLite database file:Exp.db
+    Calculate the per-image mean values of object measurements?:Yes
+    Calculate the per-image median values of object measurements?:Yes
+    Calculate the per-image standard deviation values of object measurements?:Yes
+    Calculate the per-well mean values of object measurements?:No
+    Calculate the per-well median values of object measurements?:No
+    Calculate the per-well standard deviation values of object measurements?:No
+    Export measurements for all objects to the database?:Select...
+    Select the objects:FilteredIn
+    Maximum # of characters in a column name:64
+    Create one table per object, a single object table or a single object view?:Single object view
+    Enter an image url prepend if you plan to access your files via http:
+    Write image thumbnails directly to the database?:No
+    Select the images for which you want to save thumbnails:
+    Auto-scale thumbnail pixel intensities?:Yes
+    Select the plate type:None
+    Select the plate metadata:None
+    Select the well metadata:None
+    Include information for all images, using default values?:Yes
+    Properties image group count:1
+    Properties group field count:1
+    Properties filter field count:0
+    Workspace measurement count:1
+    Experiment name:Exp
+    Which objects should be used for locations?:FilteredIn
+    Enter a phenotype class table name if using the classifier tool:
+    Export object relationships?:Yes
+    Overwrite without warning?:Never
+    Access CPA images via URL?:No
+    Select the classification type:Object
+    Select an image to include:None
+    Use the image name for the display?:Yes
+    Image name:Channel1
+    Channel color:red
+    Do you want to add group fields?:No
+    Enter the name of the group:
+    Enter the per-image columns which define the group, separated by commas:ImageNumber, Image_Metadata_Plate, Image_Metadata_Well
+    Do you want to add filter fields?:No
+    Automatically create a filter for each plate?:No
+    Create a CellProfiler Analyst workspace file?:No
+    Select the measurement display tool:ScatterPlot
+    Type of measurement to plot on the X-axis:Image
+    Enter the object name:None
+    Select the X-axis measurement:None
+    Select the X-axis index:ImageNumber
+    Type of measurement to plot on the Y-axis:Image
+    Enter the object name:None
+    Select the Y-axis measurement:None
+    Select the Y-axis index:ImageNumber
+
+ExportToDatabase:[module_num:46|svn_version:\'Unknown\'|variable_revision_number:27|show_window:False|notes:\x5B\'This module saves the measurements relative to the Cytoplasms without targets to the database.\'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Database type:SQLite
+    Database name:DefaultDB
+    Add a prefix to table names?:Yes
+    Table prefix:CytoMinusDrops_
+    SQL file prefix:SQL_
+    Output file location:Default Output Folder\x7C
+    Create a CellProfiler Analyst properties file?:Yes
+    Database host:
+    Username:
+    Password:
+    Name the SQLite database file:Exp.db
+    Calculate the per-image mean values of object measurements?:Yes
+    Calculate the per-image median values of object measurements?:Yes
+    Calculate the per-image standard deviation values of object measurements?:Yes
+    Calculate the per-well mean values of object measurements?:No
+    Calculate the per-well median values of object measurements?:No
+    Calculate the per-well standard deviation values of object measurements?:No
+    Export measurements for all objects to the database?:Select...
+    Select the objects:CytoplasmMinusDrops
+    Maximum # of characters in a column name:64
+    Create one table per object, a single object table or a single object view?:Single object view
+    Enter an image url prepend if you plan to access your files via http:
+    Write image thumbnails directly to the database?:No
+    Select the images for which you want to save thumbnails:
+    Auto-scale thumbnail pixel intensities?:Yes
+    Select the plate type:None
+    Select the plate metadata:None
+    Select the well metadata:None
+    Include information for all images, using default values?:Yes
+    Properties image group count:1
+    Properties group field count:1
+    Properties filter field count:0
+    Workspace measurement count:1
+    Experiment name:Exp
+    Which objects should be used for locations?:CytoplasmMinusDrops
+    Enter a phenotype class table name if using the classifier tool:
+    Export object relationships?:Yes
+    Overwrite without warning?:Never
+    Access CPA images via URL?:No
+    Select the classification type:Object
+    Select an image to include:None
+    Use the image name for the display?:Yes
+    Image name:Channel1
+    Channel color:red
+    Do you want to add group fields?:No
+    Enter the name of the group:
+    Enter the per-image columns which define the group, separated by commas:ImageNumber, Image_Metadata_Plate, Image_Metadata_Well
+    Do you want to add filter fields?:No
+    Automatically create a filter for each plate?:No
+    Create a CellProfiler Analyst workspace file?:No
+    Select the measurement display tool:ScatterPlot
+    Type of measurement to plot on the X-axis:Image
+    Enter the object name:None
+    Select the X-axis measurement:None
+    Select the X-axis index:ImageNumber
+    Type of measurement to plot on the Y-axis:Image
+    Enter the object name:None
+    Select the Y-axis measurement:None
+    Select the Y-axis index:ImageNumber
+
+ExportToDatabase:[module_num:47|svn_version:\'Unknown\'|variable_revision_number:27|show_window:False|notes:\x5B\'This module saves the measurements relative to the Nuclei to the database.\'\x5D|batch_state:array(\x5B\x5D, dtype=uint8)|enabled:True|wants_pause:False]
+    Database type:SQLite
+    Database name:DefaultDB
+    Add a prefix to table names?:Yes
+    Table prefix:Nucleus_
+    SQL file prefix:SQL_
+    Output file location:Default Output Folder\x7C
+    Create a CellProfiler Analyst properties file?:Yes
+    Database host:
+    Username:
+    Password:
+    Name the SQLite database file:Exp.db
+    Calculate the per-image mean values of object measurements?:Yes
+    Calculate the per-image median values of object measurements?:Yes
+    Calculate the per-image standard deviation values of object measurements?:Yes
+    Calculate the per-well mean values of object measurements?:No
+    Calculate the per-well median values of object measurements?:No
+    Calculate the per-well standard deviation values of object measurements?:No
+    Export measurements for all objects to the database?:Select...
+    Select the objects:FilteredNuclei
+    Maximum # of characters in a column name:64
+    Create one table per object, a single object table or a single object view?:Single object view
+    Enter an image url prepend if you plan to access your files via http:
+    Write image thumbnails directly to the database?:No
+    Select the images for which you want to save thumbnails:
+    Auto-scale thumbnail pixel intensities?:Yes
+    Select the plate type:None
+    Select the plate metadata:None
+    Select the well metadata:None
+    Include information for all images, using default values?:Yes
+    Properties image group count:1
+    Properties group field count:1
+    Properties filter field count:0
+    Workspace measurement count:1
+    Experiment name:Exp
+    Which objects should be used for locations?:FilteredNuclei
+    Enter a phenotype class table name if using the classifier tool:
+    Export object relationships?:Yes
+    Overwrite without warning?:Never
+    Access CPA images via URL?:No
+    Select the classification type:Object
+    Select an image to include:None
+    Use the image name for the display?:Yes
+    Image name:Channel1
+    Channel color:red
+    Do you want to add group fields?:No
+    Enter the name of the group:
+    Enter the per-image columns which define the group, separated by commas:ImageNumber, Image_Metadata_Plate, Image_Metadata_Well
+    Do you want to add filter fields?:No
+    Automatically create a filter for each plate?:No
+    Create a CellProfiler Analyst workspace file?:No
+    Select the measurement display tool:ScatterPlot
+    Type of measurement to plot on the X-axis:Image
+    Enter the object name:None
+    Select the X-axis measurement:None
+    Select the X-axis index:ImageNumber
+    Type of measurement to plot on the Y-axis:Image
+    Enter the object name:None
+    Select the Y-axis measurement:None
+    Select the Y-axis index:ImageNumber
